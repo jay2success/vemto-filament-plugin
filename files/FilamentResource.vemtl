@@ -44,6 +44,7 @@ use Filament\Tables\Filters\MultiSelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 <% } %>
 use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\Card;
 
 class <$ crudModelName $>Resource extends Resource
 {
@@ -61,70 +62,73 @@ class <$ crudModelName $>Resource extends Resource
     {
         return $form
             ->schema([
-                Grid::make(['default' => 0])->schema([
-                <% if(this.crud.inputs.length && crudPluginData.inputs) { %>
-                    <# Crud inputs #>
-                    <% for(let input of this.crud.inputs) { %>
-                        <###>
-                        <% let inputNeedsOptions = input.isSelect() && !input.isForRelationship() %>
-                        <###>
-                        <$ this.getTypeForFilament(input) $>::make('<$ input.name $>')
-                        ->rules(<$ input.convertValidationToArrayForTemplate(input.validation) $>)
-                        <###>
-                        <% if(input.isNumeric()) { %>
-                        ->numeric()
-                        <% } %>
-                        <###>
-                        <% if(input.isForRelationship()) { %>
-                        ->relationship('<$ input.relationship.name $>', '<$ input.relationship.model.getLabelFieldName() $>')
-                        <% } %>
-                        <###>
-                        <% if(input.isEmail()) { %>
-                        ->email()
-                        <% } %>
-                        <###>
-                        <% if(input.isPassword()) { %>
-                        ->password()
-                        ->dehydrateStateUsing(fn ($state) => \Hash::make($state))
-                        <% } %>
-                        <###>
-                        <% if(input.isUrl()) { %>
-                        ->url()
-                        <% } %>
-                        <###>
-                        <% if(input.isImage()) { %>
-                        ->image()
-                        <% } %>
-                        <###>
-                        <% if(input.isSelect()) { %>
-                        ->searchable()
-                        <% } %>
-                        <###>
-                        <% if(inputNeedsOptions) { %>
-                        ->options([
-                            <% for(let item of input.items) { %>
-                                '<$ item.value $>' => '<$ item.label $>',
+            Card::make()
+                ->schema([
+                    Grid::make(['default' => 0])->schema([
+                    <% if(this.crud.inputs.length && crudPluginData.inputs) { %>
+                        <# Crud inputs #>
+                        <% for(let input of this.crud.inputs) { %>
+                            <###>
+                            <% let inputNeedsOptions = input.isSelect() && !input.isForRelationship() %>
+                            <###>
+                            <$ this.getTypeForFilament(input) $>::make('<$ input.name $>')
+                            ->rules(<$ input.convertValidationToArrayForTemplate(input.validation) $>)
+                            <###>
+                            <% if(input.isNumeric()) { %>
+                            ->numeric()
                             <% } %>
-                        ])
-                        <% } %>
-                        <###>
-                        <% if(input.placeholder && !input.isCheckbox()) { %>
-                        ->placeholder('<$ input.placeholder $>')
-                        <% } %>
-                        <###>
-                        <% if(input.defaultValue) { %>
-                        ->default('<$ input.defaultValue $>')
-                        <% } %>
-                        ->columnSpan([
-                            'default' => <$ input.cols $>,
-                            'md' => <$ input.colsMedium $>,
-                            'lg' => <$ input.colsLarge $>
-                        ]),
+                            <###>
+                            <% if(input.isForRelationship()) { %>
+                            ->relationship('<$ input.relationship.name $>', '<$ input.relationship.model.getLabelFieldName() $>')
+                            <% } %>
+                            <###>
+                            <% if(input.isEmail()) { %>
+                            ->email()
+                            <% } %>
+                            <###>
+                            <% if(input.isPassword()) { %>
+                            ->password()
+                            ->dehydrateStateUsing(fn ($state) => \Hash::make($state))
+                            <% } %>
+                            <###>
+                            <% if(input.isUrl()) { %>
+                            ->url()
+                            <% } %>
+                            <###>
+                            <% if(input.isImage()) { %>
+                            ->image()
+                            <% } %>
+                            <###>
+                            <% if(input.isSelect()) { %>
+                            ->searchable()
+                            <% } %>
+                            <###>
+                            <% if(inputNeedsOptions) { %>
+                            ->options([
+                                <% for(let item of input.items) { %>
+                                    '<$ item.value $>' => '<$ item.label $>',
+                                <% } %>
+                            ])
+                            <% } %>
+                            <###>
+                            <% if(input.placeholder && !input.isCheckbox()) { %>
+                            ->placeholder('<$ input.placeholder $>')
+                            <% } %>
+                            <###>
+                            <% if(input.defaultValue) { %>
+                            ->default('<$ input.defaultValue $>')
+                            <% } %>
+                            ->columnSpan([
+                                'default' => <$ input.cols $>,
+                                'md' => <$ input.colsMedium $>,
+                                'lg' => <$ input.colsLarge $>
+                            ]),
 
+                        <% } %>
                     <% } %>
-                <% } %>
+                    ])
                 ])
-            ]);
+        ]);
     }
 
     public static function table(Table $table): Table
